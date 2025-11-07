@@ -1,0 +1,73 @@
+services:
+  app:
+    build:
+      context: ./docker/php
+      dockerfile: Dockerfile
+    container_name: fanta-incrociator-app
+    working_dir: /var/www/html
+    volumes:
+      - ./backend:/var/www/html
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=fanta_incrociator
+      - DB_USERNAME=fanta_user
+      - DB_PASSWORD=fanta_password
+    networks:
+      - fanta-network
+    depends_on:
+      - mysql
+
+  nginx:
+    image: nginx:alpine
+    container_name: fanta-incrociator-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./backend:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - fanta-network
+    depends_on:
+      - app
+
+  mysql:
+    image: mysql:8.0
+    container_name: fanta-incrociator-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_123
+      MYSQL_DATABASE: fanta_incrociator
+      MYSQL_USER: fanta_user
+      MYSQL_PASSWORD: fanta_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - fanta-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  frontend:
+    image: node:20-alpine
+    container_name: fanta-incrociator-frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - fanta-network
+    environment:
+      - VITE_API_URL=http://localhost:8080/api
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  fanta-network:
+    driver: bridge
