@@ -32,24 +32,24 @@ class Team extends Model
     /**
      * Get all matches where this team is the home team.
      */
-    public function homeMatches()
-    {
-        return $this->hasMany(Match::class, 'home_team_id');
-    }
+    // public function homeMatches()
+    // {
+    //     return $this->hasMany(Match::class, 'home_team_id');
+    // }
 
     /**
      * Get all matches where this team is the away team.
      */
-    public function awayMatches()
-    {
-        return $this->hasMany(Match::class, 'away_team_id');
-    }
+    // public function awayMatches()
+    // {
+    //     return $this->hasMany(Match::class, 'away_team_id');
+    // }
 
     /**
      * Get all matches for this team (home or away).
      */
-    public function allMatches()
-    {
-        return $this->homeMatches()->union($this->awayMatches());
-    }
+    // public function allMatches()
+    // {
+    //     return $this->homeMatches()->union($this->awayMatches());
+    // }
 }
