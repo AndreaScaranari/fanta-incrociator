@@ -8,7 +8,7 @@ services:
     volumes:
       - ./backend:/var/www/html
     environment:
-      - DB_HOST=mysql
+      - DB_HOST=fanta-incrociator-mysql
       - DB_PORT=3306
       - DB_DATABASE=fanta_incrociator
       - DB_USERNAME=fanta_user
@@ -63,6 +63,21 @@ services:
       - fanta-network
     environment:
       - VITE_API_URL=http://localhost:8080/api
+
+  phpmyadmin:
+      image: phpmyadmin:latest
+      container_name: fanta-incrociator-phpmyadmin
+      environment:
+        PMA_HOST: fanta-incrociator-mysql
+        PMA_USER: fanta_user
+        PMA_PASSWORD: fanta_password
+        PMA_DB: fanta_incrociator
+      ports:
+        - "8081:80"
+      depends_on:
+        - mysql
+      networks:
+        - fanta-network
 
 volumes:
   mysql_data:

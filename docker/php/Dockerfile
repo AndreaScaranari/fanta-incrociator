@@ -5,12 +5,15 @@ RUN apk add --no-cache \
     libzip-dev \
     zip \
     curl \
-    git
+    git \
+    icu-dev
 
 RUN docker-php-ext-install \
     pdo \
     pdo_mysql \
-    bcmath
+    bcmath \
+    zip \
+    intl
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
