@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import TeamList from '../components/TeamList.vue'
-import TeamRankingEditor from '../components/TeamRankingEditor.vue'
+import TeamList from '../views/TeamList.vue'
+import TeamRankingEditor from '../views/TeamRankingEditor.vue'
 import { nextTick } from 'vue'
 
 const routes = [
