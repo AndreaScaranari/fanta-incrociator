@@ -1,0 +1,26 @@
+// ============================================
+// FANTA INCROCIATOR - Global Styles
+// ============================================
+
+// Colori personalizzati per tier
+$tier-1-color: #2d6a4f; // Verde scuro
+$tier-1-5-color: #52b788; // Verde
+$tier-2-color: #fee440; // Giallo
+$tier-2-5-color: #fb8500; // Arancione
+$tier-3-color: #d62828; // Rosso
+
+// Global styles
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// Utility personalizzate per tier
+.tier-1 { color: $tier-1-color; }
+.tier-1-5 { color: $tier-1-5-color; }
+.tier-2 { color: $tier-2-color; }
+.tier-2-5 { color: $tier-2-5-color; }
+.tier-3 { color: $tier-3-color; }

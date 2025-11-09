@@ -1,30 +1,71 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div id="app">
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <router-link to="/" class="navbar-brand">
+          ⚽ Fanta Incrociator
+        </router-link>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <router-link to="/" class="nav-link" active-class="active">
+                Home
+              </router-link>
+            </li>
+            <li class="nav-item">
+              <router-link to="/ranking" class="nav-link" active-class="active">
+                Modifica Ranking
+              </router-link>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <router-view />
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light py-4 mt-5 border-top">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col text-center text-muted">
+            <small>
+              Fanta Incrociator v1.0 | Made with ❤️ by Andrea Scaranari
+            </small>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<script setup>
+</script>
+
+<style scoped lang="scss">
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+.main-content {
+  flex: 1;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+footer {
+  margin-top: auto;
 }
 </style>
