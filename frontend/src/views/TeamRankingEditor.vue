@@ -33,16 +33,13 @@ const updateSingleTeam = async (team) => {
     }
 }
 
-const getTierBadgeClass = (tier) => {
+const getTierBg = (tier) => {
     const tierClasses = {
-        '1': 'badge bg-success',
-        '1.0': 'badge bg-success',
-        '1.5': 'badge bg-info',
-        '2': 'badge bg-warning text-dark',
-        '2.0': 'badge bg-warning text-dark',
-        '2.5': 'badge bg-warning text-dark',
-        '3': 'badge bg-danger',
-        '3.0': 'badge bg-danger'
+        '1.0': '1',
+        '1.5': '1-5',
+        '2.0': '2',
+        '2.5': '2-5',
+        '3.0': '3'
     }
     return tierClasses[tier] || 'badge bg-secondary'
 }
@@ -86,8 +83,8 @@ const getRowClass = (team) => {
                             <td class="team-name">
                                 {{ team.nome }}
                             </td>
-                            <td>
-                                <span :class="getTierBadgeClass(team.tier)">{{ team.tier }}</span>
+                            <td class="badge-cell">
+                                <span :class="`badge bg-tier-${getTierBg(team.tier)}`">{{ team.tier }}</span>
                             </td>
                             <td>
                                 <select v-model.number="tempTiers[team.id]" class="form-select form-select-sm"
@@ -135,8 +132,20 @@ const getRowClass = (team) => {
     }
 }
 
+th {
+    text-align: center;
+}
+
+.badge-cell {
+    text-align: center;
+}
+
 .team-name {
     font-weight: bold;
+}
+
+.badge {
+    color: $white;
 }
 
 .table-hover tbody tr:hover {
