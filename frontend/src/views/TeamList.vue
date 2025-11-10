@@ -3,6 +3,8 @@ import { onMounted, ref } from 'vue'
 import { useTeams } from '../composables/useTeams'
 import Titolone from '../components/Titolone.vue'
 import Loader from '../components/Loader.vue'
+import ErrorMsg from '../components/ErrorMsg.vue'
+import WarningMsg from '../components/WarningMsg.vue'
 
 const { teams, loading, error, fetchTeams, teamsGroupedByTier } = useTeams()
 
@@ -10,20 +12,6 @@ onMounted(() => {
     fetchTeams()
 })
 
-const handleRefresh = () => {
-    fetchTeams()
-}
-
-const getTierClass = (tier) => {
-    const tierClasses = {
-        '1': 'bg-success text-white',
-        '1.5': 'bg-info text-white',
-        '2': 'bg-warning text-dark',
-        '2.5': 'bg-warning text-dark',
-        '3': 'bg-danger text-white'
-    }
-    return tierClasses[tier] || 'bg-secondary text-white'
-}
 </script>
 
 <template>
@@ -33,33 +21,23 @@ const getTierClass = (tier) => {
     <!-- Loading State -->
     <Loader v-if="loading" />
 
-    <div v-else class="container page-content py-4">
+    <div v-else class="container page-content">
 
         <!-- Error State -->
-        <div v-if="error" class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ error }}
-            <button type="button" class="btn-close" @click="error = null"></button>
-        </div>
+        <ErrorMsg v-if="error" :error="error" />
 
         <!-- Teams Grouped by Tier -->
-        <div v-if="!loading && teams.length > 0" class="row">
-            <div v-for="(tierTeams, tier) in teamsGroupedByTier" :key="tier" class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100">
-                    <div class="card-header" :class="getTierClass(tier)">
-                        <h5 class="mb-0">
+        <div v-if="!loading && teams.length > 0" class="row row-tierlist">
+            <div v-for="(tierTeams, tier) in teamsGroupedByTier" :key="tier" class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5>
                             Tier {{ tier }}
-                            <span class="badge bg-secondary ms-2">{{ tierTeams.length }}</span>
                         </h5>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li v-for="team in tierTeams" :key="team.id"
-                            class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>{{ team.nome }}</strong>
-                                <br>
-                                <small class="text-muted">ID: {{ team.id }}</small>
-                            </div>
-                            <span class="badge bg-primary rounded-pill">{{ team.tier }}</span>
+                        <li v-for="team in tierTeams" :key="team.id" class="list-group-item">
+                            {{ team.nome }}
                         </li>
                     </ul>
                 </div>
@@ -67,21 +45,9 @@ const getTierClass = (tier) => {
         </div>
 
         <!-- Empty State -->
-        <div v-if="!loading && teams.length === 0" class="alert alert-warning" role="alert">
-            ⚠️ Nessuna squadra trovata. Contatta l'amministratore.
-        </div>
+        <WarningMsg v-if="!loading && teams.length === 0"
+            msg="⚠️ Nessuna squadra trovata. Contatta l'amministratore." />
 
-        <!-- Action Buttons -->
-        <div class="row mt-4">
-            <div class="col">
-                <button @click="handleRefresh" class="btn btn-outline-primary me-2" :disabled="loading">
-                    <i class="bi bi-arrow-clockwise"></i> Ricarica
-                </button>
-                <router-link to="/ranking" class="btn btn-primary">
-                    <i class="bi bi-pencil-square"></i> Modifica Ranking
-                </router-link>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -91,25 +57,66 @@ const getTierClass = (tier) => {
 .page-content {
     display: flex;
     flex-direction: column;
-}
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
 
-.card {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-
-    &:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    .row-tierlist {
+        display: flex;
+        justify-content: center;
+        row-gap: 1rem;
     }
-}
 
-.list-group-item {
-    border-left: 4px solid transparent;
-    transition: all 0.2s;
+    .col {
+        width: 20%;
 
-    &:hover {
-        border-left-color: #007bff;
-        background-color: #f8f9fa;
+        .card {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            &:hover {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            .card-header {
+                color: $white;
+                background-color: $green;
+
+                h5 {
+                    margin-bottom: 0;
+                }
+            }
+
+            .list-group-item {
+                border-left: 4px solid transparent;
+                transition: all 0.2s;
+                font-weight: bold;
+
+
+                &:hover {
+                    border-left-color: $blue;
+                    background-color: #f8f9fa;
+                }
+            }
+        }
     }
+
+    @media (max-width: 991px) {
+        .row-tierlist {
+            margin: 0 -0.5rem;
+
+            .col {
+                padding: 0 0.5rem;
+            }
+        }
+    }
+
+    @media (max-width: 767px) {
+        .row-tierlist {
+            .col {
+                width: 100%;
+                flex: auto;
+            }
+        }
+    }
+
 }
 </style>

@@ -5,7 +5,7 @@
             <div class="spinner-border spinner-border-sm" role="status">
                 <span class="visually-hidden">Caricamento...</span>
             </div>
-            <p class="info-loading">Caricamento squadre...</p>
+            <p class="info-loading">Caricamento...</p>
         </div>
     </div>
 </template>
