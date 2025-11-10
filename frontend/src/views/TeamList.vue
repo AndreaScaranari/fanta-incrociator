@@ -1,19 +1,39 @@
-<template>
-    <div class="container-fluid py-5">
-        <div class="row mb-4">
-            <div class="col">
-                <h1 class="display-4">📊 Fanta Incrociator</h1>
-                <p class="lead text-muted">Analisi e gestione del ranking delle squadre Serie A</p>
-            </div>
-        </div>
+<script setup>
+import { onMounted, ref } from 'vue'
+import { useTeams } from '../composables/useTeams'
+import Titolone from '../components/Titolone.vue'
+import Loader from '../components/Loader.vue'
 
-        <!-- Loading State -->
-        <div v-if="loading" class="alert alert-info" role="alert">
-            <div class="spinner-border spinner-border-sm me-2" role="status">
-                <span class="visually-hidden">Caricamento...</span>
-            </div>
-            Caricamento squadre...
-        </div>
+const { teams, loading, error, fetchTeams, teamsGroupedByTier } = useTeams()
+
+onMounted(() => {
+    fetchTeams()
+})
+
+const handleRefresh = () => {
+    fetchTeams()
+}
+
+const getTierClass = (tier) => {
+    const tierClasses = {
+        '1': 'bg-success text-white',
+        '1.5': 'bg-info text-white',
+        '2': 'bg-warning text-dark',
+        '2.5': 'bg-warning text-dark',
+        '3': 'bg-danger text-white'
+    }
+    return tierClasses[tier] || 'bg-secondary text-white'
+}
+</script>
+
+<template>
+    <!-- titolo -->
+    <Titolone title="Main Dashboard" subtitle="Tutte le info sulle squadre di Serie A" />
+
+    <!-- Loading State -->
+    <Loader v-if="loading" />
+
+    <div v-else class="container page-content py-4">
 
         <!-- Error State -->
         <div v-if="error" class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -65,36 +85,12 @@
     </div>
 </template>
 
-<script setup>
-import { onMounted, ref } from 'vue'
-import { useTeams } from '../composables/useTeams'
-
-const { teams, loading, error, fetchTeams, teamsGroupedByTier } = useTeams()
-
-onMounted(() => {
-    fetchTeams()
-})
-
-const handleRefresh = () => {
-    fetchTeams()
-}
-
-const getTierClass = (tier) => {
-    const tierClasses = {
-        '1': 'bg-success text-white',
-        '1.5': 'bg-info text-white',
-        '2': 'bg-warning text-dark',
-        '2.5': 'bg-warning text-dark',
-        '3': 'bg-danger text-white'
-    }
-    return tierClasses[tier] || 'bg-secondary text-white'
-}
-</script>
-
 <style scoped lang="scss">
-.display-4 {
-    color: #007bff;
-    font-weight: 700;
+@use "@/assets/style/colors" as *;
+
+.page-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .card {

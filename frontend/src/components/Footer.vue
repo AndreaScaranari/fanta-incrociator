@@ -1,7 +1,7 @@
 <script></script>
 
 <template>
-    <footer class="bg-light py-4 mt-5 border-top">
+    <footer class="bg-light py-4 border-top">
         <div class="container-fluid">
             <div class="row">
                 <div class="col text-center text-muted">
@@ -14,8 +14,4 @@
     </footer>
 </template>
 
-<style>
-footer {
-    margin-top: auto;
-}
-</style>
+<style></style>

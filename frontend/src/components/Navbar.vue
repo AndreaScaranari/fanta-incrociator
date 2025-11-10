@@ -2,10 +2,10 @@
 </script>
 
 <template>
-    <nav class="navbar navbar-expand-lg navbar-dark ">
-        <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
             <router-link to="/" class="navbar-brand">
-                ⚽ Fanta Incrociator
+                Fanta Incrociator ⚽
             </router-link>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -14,7 +14,7 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
                         <router-link to="/" class="nav-link" active-class="active">
-                            Tier List
+                            Dashboard
                         </router-link>
                     </li>
                     <li class="nav-item">
@@ -31,12 +31,16 @@
 <style lang="scss" scoped>
 @use "@/assets/style/colors" as *;
 
-.navbar.navbar-dark {
-    background-color: $black;
-}
-
-.navbar-brand {
-    font-weight: 700;
+nav {
+    height: 80px;
     font-size: 1.25rem;
+    background-color: $black;
+    color: $white;
+
+    .navbar-brand {
+        font-weight: 700;
+        font-size: 1.75rem;
+        color: $white;
+    }
 }
 </style>
