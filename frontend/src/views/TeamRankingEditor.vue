@@ -4,6 +4,7 @@ import { useTeams } from '../composables/useTeams'
 import Loader from '../components/Loader.vue'
 import ErrorMsg from '../components/ErrorMsg.vue'
 import Titolone from '../components/Titolone.vue'
+import UpdateButton from '../components/UpdateButton.vue'
 
 // Composable - contiene la logica dei dati
 const { teams, loading, error, fetchTeams, reorderTeams, teamsByTier } = useTeams()
@@ -71,11 +72,11 @@ const updateAllTeams = async () => {
  */
 const getTierBg = (tier) => {
     const tierClasses = {
-        '1.0': '1',
+        '1.0': '1-0',
         '1.5': '1-5',
-        '2.0': '2',
+        '2.0': '2-0',
         '2.5': '2-5',
-        '3.0': '3'
+        '3.0': '3-0'
     }
     return tierClasses[tier] || 'badge bg-secondary'
 }
@@ -111,12 +112,7 @@ const getRowClass = (team) => {
 
             <!-- Pulsante Aggiorna (SOPRA) -->
             <div class="update-actions">
-                <button @click="updateAllTeams" class="btn" :disabled="changedTeamsCount === 0 || isUpdating">
-                    <span v-if="isUpdating" class="spinner-border spinner-border-sm me-2" role="status">
-                        <span class="visually-hidden">Salvataggio...</span>
-                    </span>
-                    Aggiorna {{ changedTeamsCount > 0 ? `(${changedTeamsCount})` : '' }}
-                </button>
+                <UpdateButton :changedCount="changedTeamsCount" :isLoading="isUpdating" @update="updateAllTeams" />
             </div>
 
             <div class="table-responsive">
@@ -153,12 +149,7 @@ const getRowClass = (team) => {
 
             <!-- Pulsante Aggiorna (SOTTO) -->
             <div class="update-actions">
-                <button @click="updateAllTeams" class="btn" :disabled="changedTeamsCount === 0 || isUpdating">
-                    <span v-if="isUpdating" class="spinner-border spinner-border-sm me-2" role="status">
-                        <span class="visually-hidden">Salvataggio...</span>
-                    </span>
-                    Aggiorna {{ changedTeamsCount > 0 ? `(${changedTeamsCount})` : '' }}
-                </button>
+                <UpdateButton :changedCount="changedTeamsCount" :isLoading="isUpdating" @update="updateAllTeams" />
             </div>
 
         </div>
