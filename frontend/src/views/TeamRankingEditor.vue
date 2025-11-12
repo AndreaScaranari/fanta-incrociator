@@ -1,38 +1,74 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useTeams } from '../composables/useTeams'
 import Loader from '../components/Loader.vue'
 import ErrorMsg from '../components/ErrorMsg.vue'
 import Titolone from '../components/Titolone.vue'
 
-const { teams, loading, error, fetchTeams, updateTeamTier, teamsByTier } = useTeams()
-const tempTiers = ref({})
-const updatingId = ref(null)
+// Composable - contiene la logica dei dati
+const { teams, loading, error, fetchTeams, reorderTeams, teamsByTier } = useTeams()
 
+// State locale - traccia i cambiamenti
+const tempTiers = ref({})
+const isUpdating = ref(false)
+
+// Carica i dati al mount
 onMounted(() => {
     fetchTeams()
 })
 
-const updateSingleTeam = async (team) => {
-    const newTier = tempTiers.value[team.id]
+/**
+ * Calcola quanti team sono stati modificati
+ */
+const changedTeamsCount = computed(() => {
+    return Object.keys(tempTiers.value).filter(teamId => {
+        return tempTiers.value[teamId] && tempTiers.value[teamId] !== teams.value.find(t => t.id == teamId)?.tier
+    }).length
+})
 
-    if (!newTier || newTier === team.tier) {
+/**
+ * Costruisce l'array di team da inviare al backend
+ * Filtra solo quelli modificati
+ */
+const getChangedTeams = () => {
+    return Object.keys(tempTiers.value)
+        .filter(teamId => {
+            return tempTiers.value[teamId] && tempTiers.value[teamId] !== teams.value.find(t => t.id == teamId)?.tier
+        })
+        .map(teamId => ({
+            id: parseInt(teamId),
+            tier: parseFloat(tempTiers.value[teamId])
+        }))
+}
+
+/**
+ * Invia TUTTI i cambiamenti al backend in una singola richiesta
+ */
+const updateAllTeams = async () => {
+    const changedTeams = getChangedTeams()
+
+    if (changedTeams.length === 0) {
+        alert('Nessun cambio da salvare!')
         return
     }
 
-    updatingId.value = team.id
+    isUpdating.value = true
 
     try {
-        await updateTeamTier(team.id, newTier)
-        // Reset il valore temporaneo dopo il salvataggio
-        tempTiers.value[team.id] = ''
+        await reorderTeams(changedTeams)
+        // Reset i valori temporanei dopo il successo
+        tempTiers.value = {}
+        alert(`✅ ${changedTeams.length} squadre aggiornate!`)
     } catch (err) {
-        console.error('Errore nel salvataggio:', err)
+        console.error('Errore nell\'aggiornamento:', err)
     } finally {
-        updatingId.value = null
+        isUpdating.value = false
     }
 }
 
+/**
+ * Ritorna la classe CSS per il badge del tier
+ */
 const getTierBg = (tier) => {
     const tierClasses = {
         '1.0': '1',
@@ -44,6 +80,9 @@ const getTierBg = (tier) => {
     return tierClasses[tier] || 'badge bg-secondary'
 }
 
+/**
+ * Ritorna la classe CSS per la riga (highlight se modificata)
+ */
 const getRowClass = (team) => {
     if (tempTiers.value[team.id] && tempTiers.value[team.id] !== team.tier) {
         return 'table-warning'
@@ -58,6 +97,7 @@ const getRowClass = (team) => {
 
     <!-- Loading State -->
     <Loader v-if="loading" />
+
     <div v-else class="container page-content">
 
         <!-- Error State -->
@@ -68,6 +108,17 @@ const getRowClass = (team) => {
             <div class="card-header">
                 <h5 class="mb-0">Squadre e Tier</h5>
             </div>
+
+            <!-- Pulsante Aggiorna (SOPRA) -->
+            <div class="update-actions">
+                <button @click="updateAllTeams" class="btn" :disabled="changedTeamsCount === 0 || isUpdating">
+                    <span v-if="isUpdating" class="spinner-border spinner-border-sm me-2" role="status">
+                        <span class="visually-hidden">Salvataggio...</span>
+                    </span>
+                    Aggiorna {{ changedTeamsCount > 0 ? `(${changedTeamsCount})` : '' }}
+                </button>
+            </div>
+
             <div class="table-responsive">
                 <table class="table table-hover mb-0">
                     <thead class="table-light">
@@ -75,7 +126,6 @@ const getRowClass = (team) => {
                             <th>Nome Squadra</th>
                             <th>Tier Attuale</th>
                             <th>Nuovo Tier</th>
-                            <th>Azioni</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -87,8 +137,7 @@ const getRowClass = (team) => {
                                 <span :class="`badge bg-tier-${getTierBg(team.tier)}`">{{ team.tier }}</span>
                             </td>
                             <td>
-                                <select v-model.number="tempTiers[team.id]" class="form-select form-select-sm"
-                                    style="max-width: 100px">
+                                <select v-model.number="tempTiers[team.id]" class="form-select form-select-sm">
                                     <option value="">-- Seleziona --</option>
                                     <option value="1.0">1.0</option>
                                     <option value="1.5">1.5</option>
@@ -97,22 +146,21 @@ const getRowClass = (team) => {
                                     <option value="3.0">3.0</option>
                                 </select>
                             </td>
-                            <td>
-                                <button v-if="tempTiers[team.id] && tempTiers[team.id] !== team.tier"
-                                    @click="updateSingleTeam(team)" class="btn btn-sm btn-success"
-                                    :disabled="updatingId === team.id">
-                                    <span v-if="updatingId === team.id" class="spinner-border spinner-border-sm me-2"
-                                        role="status">
-                                        <span class="visually-hidden">Salvataggio...</span>
-                                    </span>
-                                    Salva
-                                </button>
-                                <span v-else class="text-muted small">-</span>
-                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pulsante Aggiorna (SOTTO) -->
+            <div class="update-actions">
+                <button @click="updateAllTeams" class="btn" :disabled="changedTeamsCount === 0 || isUpdating">
+                    <span v-if="isUpdating" class="spinner-border spinner-border-sm me-2" role="status">
+                        <span class="visually-hidden">Salvataggio...</span>
+                    </span>
+                    Aggiorna {{ changedTeamsCount > 0 ? `(${changedTeamsCount})` : '' }}
+                </button>
+            </div>
+
         </div>
     </div>
 </template>
@@ -138,10 +186,14 @@ th {
 
 .badge-cell {
     text-align: center;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .team-name {
     font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
 }
 
 .badge {
@@ -155,5 +207,31 @@ th {
 .form-select-sm {
     padding: 0.375rem 0.75rem;
     font-size: 0.875rem;
+}
+
+.update-actions {
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: center;
+
+    &:last-of-type {
+        border-top: 1px solid #dee2e6;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .btn {
+        min-width: 150px;
+        background-color: $blue;
+        color: $white;
+        font-weight: 500;
+        transition: all 0.25s ease-in-out;
+
+        &:hover {
+            filter: brightness(1.1);
+            scale: 1.01;
+        }
+    }
 }
 </style>
