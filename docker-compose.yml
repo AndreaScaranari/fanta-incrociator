@@ -40,7 +40,7 @@ services:
       MYSQL_USER: fanta_user
       MYSQL_PASSWORD: fanta_password
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
