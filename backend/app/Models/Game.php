@@ -56,7 +56,7 @@ class Game extends Model
     /**
      * Scope per filtrare per stagione
      */
-    public function scopeSeason($query, $season = '2025-2026')
+    public function scopeSeason($query, $season = 2025)
     {
         return $query->where('season', $season);
     }
