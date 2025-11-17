@@ -30,26 +30,26 @@ class Team extends Model
     ];
 
     /**
-     * Get all matches where this team is the home team.
+     * Get all Games where this team is the home team.
      */
-    // public function homeMatches()
+    // public function homeGames()
     // {
-    //     return $this->hasMany(Match::class, 'home_team_id');
+    //     return $this->hasMany(Game::class, 'home_team_id');
     // }
 
     /**
-     * Get all matches where this team is the away team.
-     */
-    // public function awayMatches()
+ * Get all Games where this team is the away team.
+ */
+    // public function awayGames()
     // {
-    //     return $this->hasMany(Match::class, 'away_team_id');
+    //     return $this->hasMany(Game::class, 'away_team_id');
     // }
 
     /**
-     * Get all matches for this team (home or away).
-     */
-    // public function allMatches()
+ * Get all Games for this team (home or away).
+ */
+    // public function allGames()
     // {
-    //     return $this->homeMatches()->union($this->awayMatches());
+    //     return $this->homeGames()->union($this->awayGames());
     // }
 }

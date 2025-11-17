@@ -8,15 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('matches', function (Blueprint $table) {
+        Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->foreignId('home_team_id')->constrained('teams')->onDelete('cascade');
             $table->foreignId('away_team_id')->constrained('teams')->onDelete('cascade');
-            $table->unsignedTinyInteger('giornata'); // 👍 Ottimizzato!
+            $table->unsignedTinyInteger('giornata');
             $table->dateTime('data_partita')->nullable();
-            $table->string('season', 9)->default('2025-2026'); // 👍 Corretto!
-            $table->unsignedTinyInteger('home_goals')->nullable(); // 👍 Ottimizzato!
-            $table->unsignedTinyInteger('away_goals')->nullable(); // 👍 Ottimizzato!
+            $table->string('season', 9)->default('2025-2026');
+            $table->unsignedTinyInteger('home_goals')->nullable();
+            $table->unsignedTinyInteger('away_goals')->nullable();
             $table->timestamps();
 
             // Indici per performance
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->index(['home_team_id', 'season']);
             $table->index(['away_team_id', 'season']);
 
-            // Vincoli di unicità (con nota sul limite)
+            // Vincoli di unicità
             $table->unique(['home_team_id', 'giornata', 'season'], 'unique_home_match');
             $table->unique(['away_team_id', 'giornata', 'season'], 'unique_away_match');
 
@@ -37,6 +37,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('matches');
+        Schema::dropIfExists('games');
     }
 };
