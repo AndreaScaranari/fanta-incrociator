@@ -23,6 +23,8 @@ class Game extends Model
         'season',
         'home_goals',
         'away_goals',
+        'home_easy_score',
+        'away_easy_score'
     ];
 
     /**
@@ -35,6 +37,8 @@ class Game extends Model
         'giornata' => 'integer',
         'home_goals' => 'integer',
         'away_goals' => 'integer',
+        'home_easy_score' => 'decimal:1',
+        'away_easy_score' => 'decimal:1'
     ];
 
     /**
