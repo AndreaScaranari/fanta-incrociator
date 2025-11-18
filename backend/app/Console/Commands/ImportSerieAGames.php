@@ -26,5 +26,8 @@ class ImportSerieAGames extends Command
         } else {
             $this->error("❌ Errore: " . $result['message']);
         }
+
+        // ricalcolo l'easy score nel caso siano cambiate le date delle partite
+        $this->call('calculate:easyscore');
     }
 }

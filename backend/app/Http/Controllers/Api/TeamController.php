@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Team;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Artisan;
 
 class TeamController extends Controller
 {
@@ -69,6 +70,9 @@ class TeamController extends Controller
         $team->update([
             'tier' => $validated['tier'],
         ]);
+
+        // ricalcolo l'easy score nel caso siano cambiati i tier
+        Artisan::call('calculate:easyscore');
 
         return response()->json([
             'success' => true,

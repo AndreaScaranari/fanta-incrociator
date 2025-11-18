@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Team;
 use App\Models\Game;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Exception;
@@ -47,6 +48,13 @@ class FootballDataService
                 } else {
                     $skipped++;
                 }
+            }
+
+            // Salva la giornata corrente
+            if (!empty($data['matches'])) {
+                $currentGiornata = $data['matches'][0]['season']['currentMatchday'] ?? 1;
+                Setting::set('current_giornata', $currentGiornata);
+                Log::info("Giornata corrente aggiornata: {$currentGiornata}");
             }
 
             return [

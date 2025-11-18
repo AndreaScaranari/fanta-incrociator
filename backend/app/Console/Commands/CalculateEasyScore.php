@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\Services\EasyScoreService;
 
-class EasyScoreCalculator extends Command
+class CalculateEasyScore extends Command
 {
     protected $signature = 'calculate:easyscore';
     protected $description = 'Calcola gli EasyScore per il calendario della Serie A';

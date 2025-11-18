@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TeamController;
+use App\Http\Controllers\Api\SettingController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +26,9 @@ Route::prefix('teams')->group(function () {
 
     // POST /api/teams/reorder - Riordina multiple squadre
     Route::post('/reorder', [TeamController::class, 'reorder'])->name('teams.reorder');
+
+    // Settings
+    Route::get('/current-giornata', [SettingController::class, 'getCurrentGiornata']);
 
     // GET /api/teams/{team} - Dettaglio singola squadra
     Route::get('/{team}', [TeamController::class, 'show'])->name('teams.show');
