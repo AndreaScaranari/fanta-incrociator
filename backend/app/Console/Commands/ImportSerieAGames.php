@@ -7,7 +7,7 @@ use App\Services\FootballDataService;
 
 class ImportSerieAGames extends Command
 {
-    protected $signature = 'import:seriea {season? : Anno della stagione}';
+    protected $signature = 'import:serieagames {season? : Anno della stagione}';
     protected $description = 'Importa il calendario della Serie A';
 
     public function handle()

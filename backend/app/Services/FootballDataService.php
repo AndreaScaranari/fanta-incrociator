@@ -79,12 +79,6 @@ class FootballDataService
         $homeTeam = Team::where('nome', $teamMapping[$homeTeamName] ?? $homeTeamName)->first();
         $awayTeam = Team::where('nome', $teamMapping[$awayTeamName] ?? $awayTeamName)->first();
 
-        // $homeTeamName = $matchData['homeTeam']['shortName'];
-        // $awayTeamName = $matchData['awayTeam']['shortName'];
-
-        // $homeTeam = Team::where('nome', $homeTeamName)->first();
-        // $awayTeam = Team::where('nome', $awayTeamName)->first();
-
         if (!$homeTeam || !$awayTeam) {
             Log::warning("Squadre non trovate: {$homeTeamName} vs {$awayTeamName}");
             return false;
@@ -158,43 +152,5 @@ class FootballDataService
             'Hellas Verona' => 'Verona',
             'Verona' => 'Verona'
         ];
-    }
-
-    /**
-     * Ottieni la giornata corrente basandosi sulle partite giocate
-     */
-    public function getCurrentGiornata($season = 2025)
-    {
-        // 1) Trova la prima partita futura (scheduled) ordinata per data
-        $nextScheduled = Game::where('season', $season)
-            ->where('status', 'SCHEDULED')
-            ->orderBy('data_partita')
-            ->first();
-
-        // 2) Se non ci sono partite scheduled → tutta la stagione giocata
-        if (!$nextScheduled) {
-            return Game::where('season', $season)->max('giornata');
-        }
-
-        $nextGiornata = $nextScheduled->giornata;
-
-        // 3) Controlla se c'è almeno una partita IN_PLAY o FINISHED di questa giornata
-        $anyStarted = Game::where('season', $season)
-            ->where('giornata', $nextGiornata)
-            ->whereIn('status', ['IN_PLAY', 'FINISHED'])
-            ->exists();
-
-        if ($anyStarted) {
-            // La giornata corrente è la giornata della partita appena iniziata
-            $currentGiornata = $nextGiornata;
-            return $currentGiornata;
-        }
-
-        // 4) Altrimenti la giornata corrente è l'ultima completata / giocata
-        $currentGiornata = Game::where('season', $season)
-            ->whereIn('status', ['IN_PLAY', 'FINISHED'])
-            ->max('giornata');
-
-        return $currentGiornata ?? 1; // se nessuna partita iniziata, ritorna 1
     }
 }

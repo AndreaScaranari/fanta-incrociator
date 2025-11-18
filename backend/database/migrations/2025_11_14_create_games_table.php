@@ -14,7 +14,6 @@ return new class extends Migration
             $table->foreignId('away_team_id')->constrained('teams')->onDelete('cascade');
             $table->unsignedTinyInteger('giornata');
             $table->dateTime('data_partita')->nullable();
-            // $table->string('season', 9)->default('2025-2026');
             $table->unsignedSmallInteger('season')->default(2025);
             $table->decimal('home_easy_score', 3, 1)->nullable();
             $table->decimal('away_easy_score', 3, 1)->nullable();
