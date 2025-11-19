@@ -1,20 +1,27 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import TeamList from '../views/TeamList.vue'
 import TeamRankingEditor from '../views/TeamRankingEditor.vue'
-import { nextTick } from 'vue'
+
+const appName = "Fanta Incrociator"
 
 const routes = [
   {
     path: '/',
     name: 'Home',
     component: TeamList,
-    meta: { title: 'Team List - Fanta Incrociator' }
+    meta: { title: 'Team List - ' + appName }
   },
   {
     path: '/ranking',
     name: 'Ranking',
     component: TeamRankingEditor,
-    meta: { title: 'Ranking Editor - Fanta Incrociator' }
+    meta: { title: 'Ranking Editor - ' + appName }
+  },
+  {
+  path: '/easyscore',
+  name: 'EasyScore',
+  component: () => import('@/views/EasyScore.vue'),
+  meta: { title: 'EasyScore - ' + appName }
   }
 ]
 

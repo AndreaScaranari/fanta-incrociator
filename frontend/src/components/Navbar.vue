@@ -18,6 +18,11 @@
                         </router-link>
                     </li>
                     <li class="nav-item">
+                        <router-link to="/easyscore" class="nav-link" active-class="active">
+                            Incrociator
+                        </router-link>
+                    </li>
+                    <li class="nav-item">
                         <router-link to="/ranking" class="nav-link" active-class="active">
                             Modifica Ranking
                         </router-link>

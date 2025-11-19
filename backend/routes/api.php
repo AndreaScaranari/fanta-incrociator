@@ -1,10 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\GameController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\TeamController;
 use App\Http\Controllers\Api\SettingController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\SettingController;
 Route::get('/current-giornata', [SettingController::class, 'getCurrentGiornata']);
 
 // Games
-Route::get('/games', [App\Http\Controllers\Api\GameController::class, 'index']);
+Route::get('/games', [GameController::class, 'index']);
 
 Route::prefix('teams')->group(function () {
     // GET /api/teams - Lista tutte le squadre
