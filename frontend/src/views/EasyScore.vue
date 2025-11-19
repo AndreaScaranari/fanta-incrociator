@@ -21,20 +21,6 @@ onMounted(() => {
 });
 
 /**
- * Determina il colore della cella in base all'EasyScore
- * Verde scuro = facile, Rosso = difficile
- */
-const getEasyScoreColor = (score) => {
-    const numScore = parseFloat(score);
-
-    if (numScore >= 3.0) return '#2d6a4f'; // Verde scuro
-    if (numScore >= 2.5) return '#52b788'; // Verde
-    if (numScore >= 2.0) return '#fee440'; // Giallo
-    if (numScore >= 1.5) return '#fb8500'; // Arancione
-    return '#d62828'; // Rosso
-};
-
-/**
  * Determina la classe tier in base all'EasyScore
  */
 const getTierClass = (score) => {
@@ -66,16 +52,18 @@ const getTierClass = (score) => {
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Da Giornata:</label>
                     <select v-model.number="fromGiornata" class="form-select">
-                        <option v-for="g in availableGiornate" :key="g" :value="g">
-                            Giornata {{ g }}{{ g === currentGiornata ? ' (Corrente)' : '' }}
+                        <option v-for="g in availableGiornate" :key="g" :value="g.giornata">
+                            Giornata {{ g.giornata }}{{ g.giornata === currentGiornata ? ' (Corrente)' : '' }}{{ g.data
+                                ? ` - ${g.data}` : '' }}
                         </option>
                     </select>
                 </div>
                 <div class="col-md-6">
                     <label class="form-label fw-bold">A Giornata:</label>
                     <select v-model.number="toGiornata" class="form-select">
-                        <option v-for="g in availableGiornate" :key="g" :value="g" :disabled="g < fromGiornata">
-                            Giornata {{ g }}
+                        <option v-for="g in availableGiornate" :key="g.giornata" :value="g.giornata"
+                            :disabled="g.giornata < fromGiornata">
+                            Giornata {{ g.giornata }}{{ g.data ? ` - ${g.data}` : '' }}
                         </option>
                     </select>
                 </div>

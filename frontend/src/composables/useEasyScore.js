@@ -193,17 +193,36 @@ export function useEasyScore() {
     });
   });
 
-
-  // COMPUTED: Lista Giornate Disponibil
+  // COMPUTED: Lista Giornate Disponibili
   /**
-   * Genera array [1, 2, 3, ..., 38] per popolare i select
-   */
-  const availableGiornate = computed(() => {
-    // Array.from crea un array di lunghezza 38
-    // (_, i) => i + 1 trasforma indici 0-37 in valori 1-38
-    return Array.from({ length: 38 }, (_, i) => i + 1);
-  });
+  * Ottiene la prima data di una giornata e la formatto in ITA
+  */
+const getGiornataDate = (giornata) => {
+    const match = games.value.find(g => g.giornata === giornata);
+    if (!match?.data_partita) return null;
+    
+    const date = new Date(match.data_partita);
+    return date.toLocaleDateString('it-IT', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric' 
+    });
+};
 
+  /**
+  * Lista delle giornate disponibili con date
+  */
+  const availableGiornate = computed(() => {
+      const result = [];
+      for (let i = 0; i < 38; i++) {
+          const giornata = i + 1;
+          result.push({
+              giornata: giornata,
+              data: getGiornataDate(giornata)
+          });
+      }
+      return result;
+  });
 
   // EXPORT: Cosa esponiamo al componente
   return {
