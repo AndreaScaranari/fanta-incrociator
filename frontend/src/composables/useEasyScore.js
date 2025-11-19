@@ -250,10 +250,31 @@ export function useEasyScore() {
       selectedTeams.value = teams.value.map(t => t.id);
   };
 
-// deseleziona tutto
+  // deseleziona tutto
   const deselectAllTeams = () => {
       selectedTeams.value = [];
   };
+
+  // COMPUTED: calcola l'easy score giornata per giornata
+  const easyScoreTotals = computed(() => {
+      const totals = [];
+      
+      for (let g = fromGiornata.value; g <= toGiornata.value; g++) {
+          let count = 0;
+          
+          // Per ogni squadra (FILTRATA!)
+          filteredEasyScoreTable.value.forEach(row => {
+              const giornataData = row.giornate.find(gd => gd.giornata === g);
+              if (giornataData?.opponent?.easyScore >= 2.5) {
+                  count++;
+              }
+          });
+          
+          totals.push({ giornata: g, count: count });
+      }
+      
+      return totals;
+  });
 
   // EXPORT: Cosa esponiamo al componente
   return {
@@ -275,6 +296,7 @@ export function useEasyScore() {
     filteredEasyScoreTable,  // Invece di easyScoreTable
     selectAllTeams,
     deselectAllTeams,
+    easyScoreTotals,
 
     // Methods (funzioni chiamabili)
     fetchAllData,          // Chiamato all'avvio

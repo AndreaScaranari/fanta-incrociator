@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import { useEasyScore } from '@/composables/useEasyScore';
 import Titolone from '@/components/Titolone.vue';
 import Loader from '@/components/Loader.vue';
@@ -18,6 +18,7 @@ const {
     filteredEasyScoreTable,
     selectAllTeams,
     deselectAllTeams,
+    easyScoreTotals
 } = useEasyScore();
 
 onMounted(() => {
@@ -36,6 +37,13 @@ const getTierClass = (score) => {
     if (numScore >= 1.5) return 'bg-tier-2-5';
     return 'bg-tier-3-0';
 };
+
+/**
+ * Squadre ordinate alfabeticamente (per i checkbox)
+ */
+const sortedTeams = computed(() => {
+    return [...teams.value].sort((a, b) => a.nome.localeCompare(b.nome));
+});
 </script>
 
 <template>
@@ -92,7 +100,7 @@ const getTierClass = (score) => {
 
                             <!-- Checkbox Squadre -->
                             <div class="row">
-                                <div class="col-md-3 col-sm-6" v-for="team in teams" :key="team.id">
+                                <div class="col-md-3 col-sm-6" v-for="team in sortedTeams" :key="team.id">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" :id="'team-' + team.id"
                                             :value="team.id" v-model="selectedTeams">
@@ -158,6 +166,14 @@ const getTierClass = (score) => {
                                 </template>
                             </td>
                         </tr>
+                        <!-- Riga Totali -->
+                        <tr class="table-secondary fw-bold">
+                            <td class="text-center">TOTALE</td>
+                            <td class="text-center">-</td>
+                            <td v-for="total in easyScoreTotals" :key="total.giornata" class="text-center">
+                                {{ total.count }}
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
                 <div v-if="filteredEasyScoreTable.length == 0" class="no-team-selected">Nessuna Squadra
@@ -199,10 +215,10 @@ const getTierClass = (score) => {
     min-height: 100vh;
 }
 
-.table-responsive {
-    max-height: 70vh;
-    overflow-y: auto;
-}
+// .table-responsive {
+//     max-height: 70vh;
+//     overflow-y: auto;
+// }
 
 .sticky-top {
     position: sticky;
