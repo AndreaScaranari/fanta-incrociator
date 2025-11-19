@@ -25,6 +25,9 @@ export function useEasyScore() {
   // Messaggio di errore (null se tutto ok)
   const error = ref(null);
 
+  // Array di ID squadre selezionate
+  const selectedTeams = ref([]);
+
   // METODO 1: Caricamento Dati Iniziale
   /**
    * Carica tutti i dati necessari all'avvio della pagina:
@@ -54,7 +57,10 @@ export function useEasyScore() {
       // - Inizio = giornata corrente
       // - Fine = corrente + 4 (max 38)
       fromGiornata.value = currentGiornata.value;
-      toGiornata.value = Math.min(currentGiornata.value + 4, 38); 
+      toGiornata.value = Math.min(currentGiornata.value + 4, 38);
+
+      // Inizializzo tutti i team nell'array per il filtro
+      selectedTeams.value = teams.value.map(t => t.id);
 
     } catch (err) {
       // Se qualcosa va storto, salva il messaggio di errore
@@ -166,7 +172,6 @@ export function useEasyScore() {
     };
   };
 
-
   // COMPUTED: Tabella Completa 
   /**
    * Proprietà computed che si ricalcola AUTOMATICAMENTE
@@ -206,17 +211,17 @@ export function useEasyScore() {
   /**
   * Ottiene la prima data di una giornata e la formatto in ITA
   */
-const getGiornataDate = (giornata) => {
-    const match = games.value.find(g => g.giornata === giornata);
-    if (!match?.data_partita) return null;
-    
-    const date = new Date(match.data_partita);
-    return date.toLocaleDateString('it-IT', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric' 
-    });
-};
+  const getGiornataDate = (giornata) => {
+      const match = games.value.find(g => g.giornata === giornata);
+      if (!match?.data_partita) return null;
+      
+      const date = new Date(match.data_partita);
+      return date.toLocaleDateString('it-IT', { 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric' 
+      });
+  };
 
   /**
   * Lista delle giornate disponibili con date
@@ -233,6 +238,23 @@ const getGiornataDate = (giornata) => {
       return result;
   });
 
+  // COMPUTED: tabella filtrata
+  const filteredEasyScoreTable = computed(() => {
+      return easyScoreTable.value.filter(row => 
+          selectedTeams.value.includes(row.team.id)
+      );
+  });
+
+  // seleziona tutto
+  const selectAllTeams = () => {
+      selectedTeams.value = teams.value.map(t => t.id);
+  };
+
+// deseleziona tutto
+  const deselectAllTeams = () => {
+      selectedTeams.value = [];
+  };
+
   // EXPORT: Cosa esponiamo al componente
   return {
     // State (refs modificabili)
@@ -245,8 +267,14 @@ const getGiornataDate = (giornata) => {
     error,
 
     // Computed (readonly, si aggiornano automaticamente)
-    easyScoreTable,        // Tabella completa già calcolata
+    // easyScoreTable,        // Tabella completa già calcolata
     availableGiornate,     // Array [1...38]
+
+    // Computed per tabella con filtro
+    selectedTeams,
+    filteredEasyScoreTable,  // Invece di easyScoreTable
+    selectAllTeams,
+    deselectAllTeams,
 
     // Methods (funzioni chiamabili)
     fetchAllData,          // Chiamato all'avvio

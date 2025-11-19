@@ -11,9 +11,13 @@ const {
     currentGiornata,
     fromGiornata,
     toGiornata,
-    easyScoreTable,
     availableGiornate,
-    fetchAllData
+    fetchAllData,
+    teams,
+    selectedTeams,
+    filteredEasyScoreTable,
+    selectAllTeams,
+    deselectAllTeams,
 } = useEasyScore();
 
 onMounted(() => {
@@ -52,7 +56,7 @@ const getTierClass = (score) => {
                 <div class="col-md-6">
                     <label class="form-label fw-bold">Da Giornata:</label>
                     <select v-model.number="fromGiornata" class="form-select">
-                        <option v-for="g in availableGiornate" :key="g" :value="g.giornata">
+                        <option v-for="g in availableGiornate" :key="g.giornata" :value="g.giornata">
                             Giornata {{ g.giornata }}{{ g.giornata === currentGiornata ? ' (Corrente)' : '' }}{{ g.data
                                 ? ` - ${g.data}` : '' }}
                         </option>
@@ -69,11 +73,51 @@ const getTierClass = (score) => {
                 </div>
             </div>
 
+            <!-- Sezione Filtro Squadre -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">🎯 Filtra Squadre</h5>
+
+                            <!-- Pulsanti Select/Deselect -->
+                            <div class="mb-3">
+                                <button @click="selectAllTeams" class="btn btn-sm btn-success me-2">
+                                    ✓ Seleziona Tutte
+                                </button>
+                                <button @click="deselectAllTeams" class="btn btn-sm btn-danger">
+                                    ✗ Deseleziona Tutte
+                                </button>
+                            </div>
+
+                            <!-- Checkbox Squadre -->
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6" v-for="team in teams" :key="team.id">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" :id="'team-' + team.id"
+                                            :value="team.id" v-model="selectedTeams">
+                                        <label class="form-check-label" :for="'team-' + team.id">
+                                            {{ team.nome }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Info Range -->
             <div class="alert alert-info">
-                <strong>📊 Analisi:</strong>
-                Visualizzando {{ toGiornata - fromGiornata + 1 }} giornate
-                (dalla {{ fromGiornata }} alla {{ toGiornata }})
+                <p>
+                    <strong>📊 Giornate:</strong>
+                    Visualizzando {{ toGiornata - fromGiornata + 1 }} giornate
+                    (dalla {{ fromGiornata }} alla {{ toGiornata }})
+                </p>
+                <p class="mb-0">
+                    <strong>📊 Squadre:</strong>
+                    Visualizzando {{ filteredEasyScoreTable.length }} squadre su {{ teams.length }}
+                </p>
             </div>
 
             <!-- Tabella EasyScore -->
@@ -89,7 +133,7 @@ const getTierClass = (score) => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="row in easyScoreTable" :key="row.team.id">
+                        <tr v-for="row in filteredEasyScoreTable" :key="row.team.id">
                             <!-- Nome Squadra -->
                             <td class="fw-bold">{{ row.team.nome }}</td>
 
@@ -116,6 +160,8 @@ const getTierClass = (score) => {
                         </tr>
                     </tbody>
                 </table>
+                <div v-if="filteredEasyScoreTable.length == 0" class="no-team-selected">Nessuna Squadra
+                    Selezionata</div>
             </div>
 
             <!-- Legenda -->
@@ -162,6 +208,14 @@ const getTierClass = (score) => {
     position: sticky;
     top: 0;
     z-index: 10;
+}
+
+.no-team-selected {
+    text-align: center;
+    background-color: $full-white;
+    width: 80%;
+    margin: 0 auto;
+    padding: 0.5rem;
 }
 
 /* Responsive */
