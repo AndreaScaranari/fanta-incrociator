@@ -17,6 +17,12 @@ use App\Http\Controllers\Api\SettingController;
 |
 */
 
+// Settings
+Route::get('/current-giornata', [SettingController::class, 'getCurrentGiornata']);
+
+// Games
+Route::get('/games', [App\Http\Controllers\Api\GameController::class, 'index']);
+
 Route::prefix('teams')->group(function () {
     // GET /api/teams - Lista tutte le squadre
     Route::get('/', [TeamController::class, 'index'])->name('teams.index');
@@ -26,9 +32,6 @@ Route::prefix('teams')->group(function () {
 
     // POST /api/teams/reorder - Riordina multiple squadre
     Route::post('/reorder', [TeamController::class, 'reorder'])->name('teams.reorder');
-
-    // Settings
-    Route::get('/current-giornata', [SettingController::class, 'getCurrentGiornata']);
 
     // GET /api/teams/{team} - Dettaglio singola squadra
     Route::get('/{team}', [TeamController::class, 'show'])->name('teams.show');
