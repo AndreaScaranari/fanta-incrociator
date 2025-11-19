@@ -101,10 +101,13 @@ export function useEasyScore() {
   const calculateTeamEasyScore = (teamId) => {
     // Prende tutte le partite della squadra nel range
     const matches = getTeamMatches(teamId);
+
+    // se non ci sono match, setta il valore a 0
+    if (matches.length === 0) return 0;
     
     // reduce() somma tutti gli elementi di un array
     // Parte da 0 (valore iniziale) e per ogni partita aggiunge l'EasyScore
-    return matches.reduce((total, match) => {
+    const total = matches.reduce((sum, match) => {
       // La squadra gioca in casa in questa partita?
       const isHome = match.home_team_id === teamId;
       
@@ -115,8 +118,14 @@ export function useEasyScore() {
         parseFloat(match.away_easy_score || 0);
       
       // Somma questo EasyScore al totale
-      return total + easyScore;
+      return sum + easyScore;
     }, 0);  // 0 = valore iniziale della somma
+
+    // Fa la media
+    const average = total / matches.length;
+
+    // Restituisce il risultato
+    return average.toFixed(1);
   };
 
 
@@ -187,7 +196,7 @@ export function useEasyScore() {
       // Ritorna oggetto completo per questa riga della tabella
       return {
         team: team,                              // Oggetto squadra completo
-        totalEasyScore: totalEasyScore.toFixed(1),  // ES totale formattato (es: "12.5")
+        totalEasyScore: totalEasyScore,          // ES medio 
         giornate: giornateData                   // Array con dati di ogni giornata
       };
     });
