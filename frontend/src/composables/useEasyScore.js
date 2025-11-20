@@ -265,7 +265,7 @@ export function useEasyScore() {
           // Per ogni squadra (FILTRATA!)
           filteredEasyScoreTable.value.forEach(row => {
               const giornataData = row.giornate.find(gd => gd.giornata === g);
-              if (giornataData?.opponent?.easyScore >= 2.5) {
+              if (giornataData?.opponent?.easyScore >= 2) {
                   count++;
               }
           });
