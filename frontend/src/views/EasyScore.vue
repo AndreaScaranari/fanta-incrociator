@@ -159,7 +159,7 @@ const sortedTeams = computed(() => {
                                         {{ g.opponent.isHome ? '🏠' : '✈️' }} {{ g.opponent.name }}
                                     </span>
                                     <br>
-                                    <small class="text-muted">({{ g.opponent.easyScore }})</small>
+                                    <small class="text-muted fw-bold">({{ g.opponent.easyScore }})</small>
                                 </template>
                                 <template v-else>
                                     <span class="text-muted">-</span>
