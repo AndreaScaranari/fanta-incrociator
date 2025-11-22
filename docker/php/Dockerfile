@@ -20,13 +20,14 @@ RUN docker-php-ext-install \
 # Installa Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copia lo script entrypoint
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# Setup permessi Laravel
+RUN mkdir -p /var/www/html/storage/framework/{sessions,views,cache} && \
+    mkdir -p /var/www/html/storage/logs && \
+    mkdir -p /var/www/html/bootstrap/cache
 
 WORKDIR /var/www/html
 
 EXPOSE 9000
 
-# Usa l'entrypoint invece del CMD diretto
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+# 🟢 NIENTE ENTRYPOINT, solo CMD
+CMD ["sh", "-c", "chmod -R 777 storage bootstrap/cache 2>/dev/null || true && php-fpm"]
