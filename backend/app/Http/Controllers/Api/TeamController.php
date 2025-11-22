@@ -111,6 +111,9 @@ class TeamController extends Controller
             $updated[] = $team;
         }
 
+        // ricalcolo l'easy score nel caso siano cambiati i tier
+        Artisan::call('calculate:easyscore');
+
         return response()->json([
             'success' => true,
             'message' => count($updated) . ' squadre aggiornate',
