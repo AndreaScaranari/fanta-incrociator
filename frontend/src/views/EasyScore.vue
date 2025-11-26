@@ -37,13 +37,6 @@ const getTierClass = (score) => {
     if (numScore >= 1.5) return 'bg-es-1-5';
     return 'bg-es-1-0';
 };
-
-/**
- * Squadre ordinate alfabeticamente (per i checkbox)
- */
-const sortedTeams = computed(() => {
-    return [...teams.value].sort((a, b) => a.nome.localeCompare(b.nome));
-});
 </script>
 
 <template>
@@ -100,7 +93,7 @@ const sortedTeams = computed(() => {
 
                             <!-- Checkbox Squadre -->
                             <div class="row">
-                                <div class="col-md-3 col-sm-6" v-for="team in sortedTeams" :key="team.id">
+                                <div class="col-md-3 col-sm-6" v-for="team in teams" :key="team.id">
                                     <div class="form-check">
                                         <input class="form-check-input" type="checkbox" :id="'team-' + team.id"
                                             :value="team.id" v-model="selectedTeams">

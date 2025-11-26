@@ -44,7 +44,7 @@ export function useEasyScore() {
       // Invece di aspettare una dopo l'altra (sequenziale)
       const [gamesRes, teamsRes, giornataRes] = await Promise.all([
         api.get('/games'),                                    // ~380 partite
-        api.get('/teams'),                                    // ~20 squadre
+        api.get('/teams?sort=nome'),                          // ~20 squadre in ordine alfabetico
         api.get('/current-giornata')                          // Giornata corrente
       ]);
 
@@ -181,7 +181,7 @@ export function useEasyScore() {
    */
   const easyScoreTable = computed(() => {
     // map() trasforma ogni squadra in un oggetto con tutti i dati necessari
-    const table = teams.value.map(team => {
+    return teams.value.map(team => {
       // Calcola EasyScore totale per questa squadra
       const totalEasyScore = calculateTeamEasyScore(team.id);
       
@@ -205,8 +205,6 @@ export function useEasyScore() {
         giornate: giornateData                   // Array con dati di ogni giornata
       };
     });
-
-    return table.sort((a, b) => a.team.nome.localeCompare(b.team.nome));
   });
 
   // COMPUTED: Lista Giornate Disponibili
