@@ -181,7 +181,7 @@ export function useEasyScore() {
    */
   const easyScoreTable = computed(() => {
     // map() trasforma ogni squadra in un oggetto con tutti i dati necessari
-    return teams.value.map(team => {
+    const table = teams.value.map(team => {
       // Calcola EasyScore totale per questa squadra
       const totalEasyScore = calculateTeamEasyScore(team.id);
       
@@ -205,6 +205,8 @@ export function useEasyScore() {
         giornate: giornateData                   // Array con dati di ogni giornata
       };
     });
+
+    return table.sort((a, b) => a.team.nome.localeCompare(b.team.nome));
   });
 
   // COMPUTED: Lista Giornate Disponibili
@@ -228,8 +230,8 @@ export function useEasyScore() {
   */
   const availableGiornate = computed(() => {
       const result = [];
-      for (let i = 0; i < 38; i++) {
-          const giornata = i + 1;
+      for (let i = 1; i <= 38; i++) {
+          const giornata = i;
           result.push({
               giornata: giornata,
               data: getGiornataDate(giornata)

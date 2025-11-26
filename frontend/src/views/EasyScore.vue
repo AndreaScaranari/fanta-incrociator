@@ -31,11 +31,11 @@ onMounted(() => {
 const getTierClass = (score) => {
     const numScore = parseFloat(score);
 
-    if (numScore >= 3.0) return 'bg-tier-1-0';
-    if (numScore >= 2.5) return 'bg-tier-1-5';
-    if (numScore >= 2.0) return 'bg-tier-2-0';
-    if (numScore >= 1.5) return 'bg-tier-2-5';
-    return 'bg-tier-3-0';
+    if (numScore >= 3.0) return 'bg-es-3-0';
+    if (numScore >= 2.5) return 'bg-es-2-5';
+    if (numScore >= 2.0) return 'bg-es-2-0';
+    if (numScore >= 1.5) return 'bg-es-1-5';
+    return 'bg-es-1-0';
 };
 
 /**

@@ -14,7 +14,7 @@ body {
   background-color: $white;
 }
 
-// Utility personalizzate per tier
+// Utility personalizzate per Tier
 .tier-1-0 { color: $tier-1-0; }
 .tier-1-5 { color: $tier-1-5; }
 .tier-2-0 { color: $tier-2-0; }
@@ -25,3 +25,15 @@ body {
 .bg-tier-2-0 { background-color: $tier-2-0 !important; }
 .bg-tier-2-5 { background-color: $tier-2-5 !important; }
 .bg-tier-3-0 { background-color: $tier-3-0 !important; }
+
+// Utility personalizzate per EasyScore
+.es-1-0 { color: $es-1-0; }
+.es-1-5 { color: $es-1-5; }
+.es-2-0 { color: $es-2-0; }
+.es-2-5 { color: $es-2-5; }
+.es-3-0 { color: $es-3-0; }
+.bg-es-1-0 { background-color: $es-1-0 !important; }
+.bg-es-1-5 { background-color: $es-1-5 !important; }
+.bg-es-2-0 { background-color: $es-2-0 !important; }
+.bg-es-2-5 { background-color: $es-2-5 !important; }
+.bg-es-3-0 { background-color: $es-3-0 !important; }
