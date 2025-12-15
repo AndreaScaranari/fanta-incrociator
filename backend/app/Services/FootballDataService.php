@@ -12,13 +12,14 @@ use Exception;
 class FootballDataService
 {
     private $apiKey;
-    private $baseUrl = 'https://api.football-data.org/v4';
-    private $serieACompetitionId = 2019; // ID Serie A su Football-Data.org
+    private $baseUrl;
+    private $serieACompetitionId; // ID Serie A su Football-Data.org
 
     public function __construct()
     {
-        // $this->apiKey = config('services.football_data.api_key');
-        $this->apiKey = "92a6551514294e2f918d3b403931efb1";
+        $this->apiKey = config('fanta.football_api.api_key');
+        $this->baseUrl = config('fanta.football_api.base_url');
+        $this->serieACompetitionId = config('fanta.football_api.competition_id');
     }
 
     /**
