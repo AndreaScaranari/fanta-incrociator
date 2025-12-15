@@ -15,10 +15,13 @@ const {
     fetchAllData,
     teams,
     selectedTeams,
-    filteredEasyScoreTable,
+    sortedTable,
     selectAllTeams,
     deselectAllTeams,
-    easyScoreTotals
+    easyScoreTotals,
+    sortColumn,
+    sortDirection,
+    toggleSort
 } = useEasyScore();
 
 onMounted(() => {
@@ -117,24 +120,53 @@ const getTierClass = (score) => {
                 </p>
                 <p class="mb-0">
                     <strong>📊 Squadre:</strong>
-                    Visualizzando {{ filteredEasyScoreTable.length }} squadre su {{ teams.length }}
+                    Visualizzando {{ sortedTable.length }} squadre su {{ teams.length }}
                 </p>
             </div>
 
             <!-- Tabella EasyScore -->
             <div class="table-responsive">
                 <table class="table table-hover table-bordered">
+
+                    <!-- header tabella -->
                     <thead class="table-dark sticky-top">
                         <tr>
-                            <th class="text-center">Squadra</th>
-                            <th class="text-center">EasyScore Totale</th>
-                            <th v-for="i in (toGiornata - fromGiornata + 1)" :key="i" class="text-center">
-                                Gior {{ fromGiornata + i - 1 }}
+                            <!-- Colonna Squadra -->
+                            <th @click="toggleSort('team')" class="text-center sortable"
+                                :class="{ 'active': sortColumn === 'team' }"
+                                title="Clicca per ordinare alfabeticamente le squadre: ordine crescente o decrescente">
+                                <span class="coltitle">Squadra</span>
+                                <span v-if="sortColumn === 'team'" class="sort-icon">
+                                    {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                </span>
+                            </th>
+
+                            <!-- Colonna EasyScore Totale -->
+                            <th @click="toggleSort('totalES')" class="text-center sortable"
+                                :class="{ 'active': sortColumn === 'totalES' }"
+                                title="Clicca per ordinare in base alla difficoltà del periodo selezionato">
+                                <span class="coltitle">EasyScore Totale</span>
+                                <span v-if="sortColumn === 'totalES'" class="sort-icon">
+                                    {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                </span>
+                            </th>
+
+                            <!-- Colonne Giornate -->
+                            <th v-for="i in (toGiornata - fromGiornata + 1)" :key="i"
+                                @click="toggleSort(`giornata-${fromGiornata + i - 1}`)" class="text-center sortable"
+                                :class="{ 'active': sortColumn === `giornata-${fromGiornata + i - 1}` }"
+                                title="Clicca per ordinare per in base alla difficoltà di questa giornata">
+                                <span class="coltitle">Gior {{ fromGiornata + i - 1 }}</span>
+                                <span v-if="sortColumn === `giornata-${fromGiornata + i - 1}`" class="sort-icon">
+                                    {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                </span>
                             </th>
                         </tr>
                     </thead>
+
+                    <!-- corpo tabella -->
                     <tbody>
-                        <tr v-for="row in filteredEasyScoreTable" :key="row.team.id">
+                        <tr v-for="row in sortedTable" :key="row.team.id">
                             <!-- Nome Squadra -->
                             <td class="fw-bold">{{ row.team.nome }}</td>
 
@@ -169,7 +201,7 @@ const getTierClass = (score) => {
                         </tr>
                     </tbody>
                 </table>
-                <div v-if="filteredEasyScoreTable.length == 0" class="no-team-selected">Nessuna Squadra
+                <div v-if="sortedTable.length == 0" class="no-team-selected">Nessuna Squadra
                     Selezionata</div>
             </div>
 
@@ -217,6 +249,27 @@ const getTierClass = (score) => {
     position: sticky;
     top: 0;
     z-index: 10;
+}
+
+.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgb(0, 0, 0);
+    }
+
+    &.active .coltitle {
+        font-weight: bold;
+        text-decoration: underline;
+    }
+
+}
+
+.sort-icon {
+    margin-left: 0.25rem;
+    font-size: 0.8em;
 }
 
 .no-team-selected {

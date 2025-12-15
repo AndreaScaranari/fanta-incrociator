@@ -28,6 +28,10 @@ export function useEasyScore() {
   // Array di ID squadre selezionate
   const selectedTeams = ref([]);
 
+  // Ordinamento colonne in tabella > parte standard su squadra alfabetico asc
+  const sortColumn = ref('team');      // null = nessun sort attivo 
+  const sortDirection = ref('asc');  // 'asc' o 'desc'
+
   // METODO 1: Caricamento Dati Iniziale
   /**
    * Carica tutti i dati necessari all'avvio della pagina:
@@ -172,6 +176,22 @@ export function useEasyScore() {
     };
   };
 
+  // METODO 5: Ordinare la tabella per i valori di una determinata colonna
+  /**
+   * Ordina la tabella per specifica colonna
+   * Può essere ASC o DESC
+   */
+  const toggleSort = (column) => {
+    if (sortColumn.value === column) {
+      // Stessa colonna → inverti direzione
+      sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc';
+    } else {
+      // Nuova colonna → resetta ad ascendente
+      sortColumn.value = column;
+      sortDirection.value = 'asc';
+    }
+  };
+
   // COMPUTED: Tabella Completa 
   /**
    * Proprietà computed che si ricalcola AUTOMATICAMENTE
@@ -245,6 +265,50 @@ export function useEasyScore() {
       );
   });
 
+  // COMPUTED: tabella sortata
+  const sortedTable = computed(() => {
+    // Parte da filteredEasyScoreTable (già filtrata per checkbox)
+    const table = [...filteredEasyScoreTable.value];
+    
+    // Se nessun sort attivo, ritorna così com'è
+    if (!sortColumn.value) return table;
+    
+    // Ordina in base alla colonna
+    return table.sort((a, b) => {
+      let valA, valB;
+      
+      if (sortColumn.value === 'team') {
+        // Ordina per nome squadra (alfabetico)
+        valA = a.team.nome;
+        valB = b.team.nome;
+        return sortDirection.value === 'asc' 
+          ? valA.localeCompare(valB) 
+          : valB.localeCompare(valA);
+      }
+      
+      if (sortColumn.value === 'totalES') {
+        // Ordina per EasyScore totale (numerico)
+        valA = parseFloat(a.totalEasyScore);
+        valB = parseFloat(b.totalEasyScore);
+        return sortDirection.value === 'asc' ? valA - valB : valB - valA;
+      }
+      
+      if (sortColumn.value.startsWith('giornata-')) {
+        // Ordina per EasyScore di una giornata specifica
+        const giornata = parseInt(sortColumn.value.split('-')[1]);
+        const giornataDataA = a.giornate.find(g => g.giornata === giornata);
+        const giornataDataB = b.giornate.find(g => g.giornata === giornata);
+        
+        valA = giornataDataA?.opponent?.easyScore || 0;
+        valB = giornataDataB?.opponent?.easyScore || 0;
+        
+        return sortDirection.value === 'asc' ? valA - valB : valB - valA;
+      }
+      
+      return 0;
+    });
+  });
+
   // seleziona tutto
   const selectAllTeams = () => {
       selectedTeams.value = teams.value.map(t => t.id);
@@ -286,6 +350,8 @@ export function useEasyScore() {
     toGiornata,        // per cambiare il range visualizzato
     loading,
     error,
+    sortColumn,            // Per sapere quale colonna è attiva
+    sortDirection,         // Per sapere direzione (asc/desc)
 
     // Computed (readonly, si aggiornano automaticamente)
     // easyScoreTable,        // Tabella completa già calcolata
@@ -293,15 +359,17 @@ export function useEasyScore() {
 
     // Computed per tabella con filtro
     selectedTeams,
-    filteredEasyScoreTable,  // Invece di easyScoreTable
-    selectAllTeams,
-    deselectAllTeams,
+    // filteredEasyScoreTable,  // Invece di easyScoreTable
+    sortedTable, // tabella ordinata invece di filteredEasyScoreTable
     easyScoreTotals,
 
     // Methods (funzioni chiamabili)
     fetchAllData,          // Chiamato all'avvio
     getTeamMatches,        // Utility (opzionale esporre)
     calculateTeamEasyScore,  // Utility (opzionale esporre)
-    getOpponentForGiornata   // Utility (opzionale esporre)
+    getOpponentForGiornata,   // Utility (opzionale esporre)
+    selectAllTeams, // seleziona tutti per filtri con checkbox
+    deselectAllTeams, // deseleziona tutti per filtri con checkbox
+    toggleSort            // Funzione per cambiare sort
   };
 }
