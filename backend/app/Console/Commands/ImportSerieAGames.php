@@ -12,7 +12,7 @@ class ImportSerieAGames extends Command
 
     public function handle()
     {
-        $season = $this->argument('season') ?: 2025;
+        $season = $this->argument('season') ?: config('fanta.current_season');
         $service = new FootballDataService();
 
         $this->info("Importazione calendario Serie A {$season}...");

@@ -24,8 +24,11 @@ class FootballDataService
     /**
      * Importa il calendario completo della Serie A
      */
-    public function importSerieAGames($season = 2025)
+    public function importSerieAGames($season = null)
     {
+
+        $season = $season ?? config('fanta-current_season');
+
         try {
             $response = Http::withHeaders([
                 'X-Auth-Token' => $this->apiKey

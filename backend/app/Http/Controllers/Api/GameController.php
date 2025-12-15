@@ -15,7 +15,7 @@ class GameController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $season = $request->query('season', 2025);
+        $season = $request->query('season', config('fanta.current_season'));
 
         $games = Game::with(['homeTeam', 'awayTeam'])
             ->where('season', $season)

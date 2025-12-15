@@ -7,7 +7,15 @@ use App\Models\Team;
 
 class EasyScoreService
 {
-    private $bonusHome = 0.5;
+    private float $bonusHome;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->bonusHome = config('fanta.easyscore.bonus_casa', 0.5);
+    }
 
     /**
      * Ricalcola TUTTI gli easy score
@@ -42,7 +50,6 @@ class EasyScoreService
             return false;
         }
 
-        // se non trova il tier mette 1000 ai casa e 100 agli away così si capisce dove sta l'errore
         $homeEasyScore = floatval($awayTeam->tier ?? 1000) + $this->bonusHome;
         $awayEasyScore = floatval($homeTeam->tier ?? 100);
 

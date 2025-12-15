@@ -60,8 +60,9 @@ class Game extends Model
     /**
      * Scope per filtrare per stagione
      */
-    public function scopeSeason($query, $season = 2025)
+    public function scopeSeason($query, $season = null)
     {
+        $season = $season ?? config('fanta.current_season');
         return $query->where('season', $season);
     }
 
