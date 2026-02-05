@@ -19,29 +19,29 @@ class TeamSeeder extends Seeder
             ['nome' => 'Napoli', 'tier' => 1.0],
             ['nome' => 'Milan', 'tier' => 1.0],
             ['nome' => 'Roma', 'tier' => 1.0],
-
-            // Tier 1.5 - Upper-Mid
-            ['nome' => 'Bologna', 'tier' => 1.5],
             ['nome' => 'Juventus', 'tier' => 1.5],
             ['nome' => 'Como', 'tier' => 1.5],
 
-            // Tier 2 - Mid
+            // Tier 1.5 - Upper-Mid
+            ['nome' => 'Bologna', 'tier' => 1.5],
+            ['nome' => 'Atalanta', 'tier' => 1.5],
             ['nome' => 'Udinese', 'tier' => 2.0],
             ['nome' => 'Lazio', 'tier' => 2.0],
-            ['nome' => 'Atalanta', 'tier' => 2.0],
+
+            // Tier 2 - Mid
             ['nome' => 'Sassuolo', 'tier' => 2.0],
             ['nome' => 'Torino', 'tier' => 2.0],
+            ['nome' => 'Cagliari', 'tier' => 2.5],
+            ['nome' => 'Genoa', 'tier' => 3.0],
 
             // Tier 2.5 - Lower-Mid
             ['nome' => 'Cremonese', 'tier' => 2.5],
             ['nome' => 'Fiorentina', 'tier' => 2.5],
-            ['nome' => 'Cagliari', 'tier' => 2.5],
             ['nome' => 'Lecce', 'tier' => 2.5],
+            ['nome' => 'Parma', 'tier' => 3.0],
 
             // Tier 3 - Bottom
-            ['nome' => 'Parma', 'tier' => 3.0],
             ['nome' => 'Pisa', 'tier' => 3.0],
-            ['nome' => 'Genoa', 'tier' => 3.0],
             ['nome' => 'Verona', 'tier' => 3.0],
         ];
 

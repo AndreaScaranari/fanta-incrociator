@@ -1,0 +1,4 @@
+timezone: Europe/Rome
+leagues: 135 - Serie A
+https://media.api-sports.io/football/leagues/{league_id}.png
+https://v3.football.api-sports.io/leagues?id=135
